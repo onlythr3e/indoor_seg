@@ -97,10 +97,11 @@ def main(args):
     # list_test = [{'fpath_img': args.test_img}]
 
     # Pass a single image
-    if args.test_img is not None:
+    if args.test_imgs is not None:
         list_test = [{'fpath_img': x} for x in args.test_imgs]
     if args.test_img_path is not None:
-        list_test = [{'fpath_img': x} for x in os.listdir(args.test_img_path)]
+        list_test = [{'fpath_img': os.path.join(args.test_img_path, x)} for x in os.listdir(args.test_img_path)]
+        list_test = list_test[:20]
     dataset_test = TestDataset(
         list_test, args, max_sample=args.num_val)
     loader_test = torchdata.DataLoader(
