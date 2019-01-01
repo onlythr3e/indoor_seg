@@ -95,7 +95,12 @@ def main(args):
 
     # Dataset and Loader
     # list_test = [{'fpath_img': args.test_img}]
-    list_test = [{'fpath_img': x} for x in args.test_imgs]
+
+    # Pass a single image
+    if args.test_img is not None:
+        list_test = [{'fpath_img': x} for x in args.test_imgs]
+    if args.test_img_path is not None:
+        list_test = [{'fpath_img': x} for x in os.listdir(args.test_img_path)]
     dataset_test = TestDataset(
         list_test, args, max_sample=args.num_val)
     loader_test = torchdata.DataLoader(
@@ -120,8 +125,10 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     # Path related arguments
-    parser.add_argument('--test_imgs', required=True, nargs='+', type=str,
+    test_img_group = parser.add_mutually_exclusive_group(required=True)
+    test_img_group.add_argument('--test_imgs', nargs='+', type=str,
                         help='a list of image paths that needs to be tested')
+    test_img_group.add_argument('--test_img_path', type=str, help='the root dir for all imgs.')
     parser.add_argument('--model_path', required=True,
                         help='folder to model path')
     parser.add_argument('--suffix', default='_epoch_20.pth',
